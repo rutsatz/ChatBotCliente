@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatBotController">
+   <center>
+      <TextArea fx:id="taSaida" editable="false" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+      </TextArea>
+   </center>
+   <bottom>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <TextArea fx:id="taEntrada" layoutX="35.0" layoutY="15.0" onKeyReleased="#enviarMensagem" prefHeight="85.0" prefWidth="478.0" promptText="Digite sua mensagem" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="91.0" />
+            <Button fx:id="btEnviar" layoutX="519.0" layoutY="63.0" mnemonicParsing="false" onAction="#enviarMensagem" prefHeight="57.0" prefWidth="67.0" text="Enviar" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="63.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <top>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="50.0">
+               <children>
+                  <Label text="Chat Bot" />
+               </children>
+            </HBox>
+            <GridPane alignment="TOP_CENTER">
+              <columnConstraints>
+                <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="296.0" minWidth="10.0" prefWidth="72.0" />
+                <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="555.0" minWidth="10.0" prefWidth="373.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="TOP_RIGHT" text="Porta" GridPane.rowIndex="1" />
+                  <TextField fx:id="txPorta" prefHeight="25.0" prefWidth="59.0" text="12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ButtonBar prefHeight="30.0" prefWidth="265.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                    <buttons>
+                      <Button mnemonicParsing="false" onAction="#conectar" text="Conectar" />
+                        <Button mnemonicParsing="false" onAction="#desconectar" prefHeight="25.0" prefWidth="134.0" text="Desconectar" />
+                    </buttons>
+                  </ButtonBar>
+                  <Label prefHeight="17.0" prefWidth="67.0" text="Servidor" />
+                  <TextField fx:id="txServidor" text="127.0.0.1" GridPane.columnIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>
