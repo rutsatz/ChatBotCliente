@@ -53,8 +53,8 @@
                   <TextField fx:id="txPorta" prefHeight="25.0" prefWidth="59.0" text="12345" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ButtonBar prefHeight="30.0" prefWidth="265.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
                     <buttons>
-                      <Button mnemonicParsing="false" onAction="#conectar" text="Conectar" />
-                        <Button mnemonicParsing="false" onAction="#desconectar" prefHeight="25.0" prefWidth="134.0" text="Desconectar" />
+                      <Button fx:id="btConectar" mnemonicParsing="false" onAction="#conectar" text="Conectar" />
+                        <Button fx:id="btDesconectar" mnemonicParsing="false" onAction="#desconectar" prefHeight="25.0" prefWidth="134.0" text="Desconectar" />
                     </buttons>
                   </ButtonBar>
                   <Label prefHeight="17.0" prefWidth="67.0" text="Servidor" />

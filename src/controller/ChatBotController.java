@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 
 import chatbotcliente.ChatBot;
 import chatbotcliente.Mensagem;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -30,87 +32,102 @@ import javafx.scene.input.KeyEvent;
  */
 public class ChatBotController implements Initializable {
 
-    @FXML
-    private Button btEnviar;
+	@FXML
+	private Button btEnviar;
 
-    @FXML
-    public TextArea taEntrada;
+	@FXML
+	private Button btConectar;
 
-    @FXML
-    public TextArea taSaida;
+	@FXML
+	private Button btDesconectar;
 
-    @FXML
-    public TextField txPorta;
+	@FXML
+	public TextArea taEntrada;
 
-    @FXML
-    public TextField txServidor;
+	@FXML
+	public TextArea taSaida;
 
-    private Worker<String> worker;
+	@FXML
+	public TextField txPorta;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+	@FXML
+	public TextField txServidor;
 
-        /**
-         * Implementa Worker rodando por thread. (Est√° usando classe an√¥nima
-         * para rodar uma Task.)
-         */
-        worker = new Service<String>() {
-            @Override
-            protected Task<String> createTask() {
-                return new Task<String>() {
-                    @Override
-                    protected String call() throws Exception {
-                        ChatBot.aplicacao.rodarCliente();
-                        return "iniciado";
-                    }
-                };
-            }
+	private Worker<String> worker;
 
-            @Override
-            /**
-             * Fun√ß√£o chamada ao usu√°rio cancelar a Task.
-             */
-            protected void cancelled() {
-                ChatBot.aplicacao.fecharConexao();
+	public BooleanProperty isConnectedToServer = new SimpleBooleanProperty(false);
 
-                System.out.println("cancelou");
-            }
+	/**
+	 * Initializes the controller class.
+	 */
+	@Override
+	public void initialize(URL url, ResourceBundle rb) {
 
-        };
+		/**
+		 * Implementa Worker rodando por thread. (Est√° usando classe an√¥nima
+		 * para rodar uma Task.)
+		 */
+		worker = new Service<String>() {
+			@Override
+			protected Task<String> createTask() {
+				return new Task<String>() {
+					@Override
+					protected String call() throws Exception {
+						ChatBot.aplicacao.rodarCliente();
+						return "iniciado";
+					}
+				};
+			}
 
-    }
+			@Override
+			/**
+			 * FunÁ„o chamada ao usu·rio cancelar a Task.
+			 */
+			protected void cancelled() {
+				ChatBot.aplicacao.fecharConexao();
 
-    @FXML
-    private void conectar(ActionEvent e) {
-        // Inicializa a execu√ß√£o da Thread.
-        ((Service) worker).restart();
-    }
+				System.out.println("cancelou");
+			}
 
-    @FXML
-    private void desconectar(ActionEvent e) {
-        // Cancela a execu√ß√£o da Thread.
-        worker.cancel();
-    }
+		};
 
-    @FXML
-    private void enviarMensagem(Event e) {
-        // Tratamento para enviar a mensagem quando cliquei no bot√£o
-        // ou quando apertei Enter.
-        if (e.getEventType() == KeyEvent.KEY_RELEASED) {
-            KeyEvent ke = (KeyEvent) e;
-            if (ke.getCode() == KeyCode.ENTER) {
-                Mensagem mensagem = new Mensagem(taEntrada.getText());
-                mensagem.enviar();
-                taEntrada.clear();
-            }
-        } else if (e.getEventType() == ActionEvent.ACTION) {
-            Mensagem mensagem = new Mensagem(taEntrada.getText());
-            mensagem.enviar();
-            taEntrada.clear();
-        }
-        
-    }
+		// realiza os binds
+		btConectar.disableProperty().bind(isConnectedToServer);
+		btDesconectar.disableProperty().bind(isConnectedToServer.not());
+		btEnviar.disableProperty().bind(isConnectedToServer.not());
+		taEntrada.disableProperty().bind(isConnectedToServer.not());
+
+	}
+
+	@FXML
+	private void conectar(ActionEvent e) {
+		// Inicializa a execuÁ„o da Thread.
+		((Service) worker).restart();
+	}
+
+	@FXML
+	private void desconectar(ActionEvent e) {
+		// Cancela a execuÁ„o da Thread.
+		worker.cancel();
+	}
+
+	@FXML
+	private void enviarMensagem(Event e) {
+		// Tratamento para enviar a mensagem quando cliquei no bot„o
+		// ou quando apertei Enter.
+		if (e.getEventType() == KeyEvent.KEY_RELEASED) {
+			KeyEvent ke = (KeyEvent) e;
+			if (ke.getCode() == KeyCode.ENTER) {
+				// remove o \n quando aperta enter
+				Mensagem mensagem = new Mensagem(taEntrada.getText(0, taEntrada.getText().length() - 1));
+				mensagem.enviar();
+				taEntrada.clear();
+			}
+		} else if (e.getEventType() == ActionEvent.ACTION) {
+			Mensagem mensagem = new Mensagem(taEntrada.getText());
+			mensagem.enviar();
+			taEntrada.clear();
+		}
+
+	}
 }
