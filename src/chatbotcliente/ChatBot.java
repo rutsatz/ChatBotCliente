@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -99,7 +101,12 @@ public class ChatBot extends Application {
 				message = (String) input.readObject();
 				exibirMensagem("\nServidor>>> " + message);
 				
-			} catch (ClassNotFoundException classNotFoundException) {
+			}catch (SocketException socketException) {
+				Platform.runLater(() -> {
+					controller.taSaida.setText("\nDesconectado do servidor.");
+				});
+			} 
+			catch (ClassNotFoundException classNotFoundException) {
 				exibirMensagem("Tipo de objeto desconhecido recebido.");
 			}
 		} while (controller.isConnectedToServer.get());
@@ -117,7 +124,7 @@ public class ChatBot extends Application {
 			iOException.printStackTrace();
 		}
 
-		exibirMensagem("Conexão encerrada");
+		exibirMensagem("\nConexão encerrada");
 		controller.isConnectedToServer.set(false);
 	}
 
