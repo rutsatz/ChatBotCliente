@@ -59,17 +59,17 @@ public class ChatBot extends Application {
 			getStreams();
 			processaConexao(); // Processa as mensagens recebidas
 		} catch (EOFException eOFException) {
-			exibirMensagem("Cliente encerrou a conexão.");
+			exibirMensagem("\nServidor encerrou a conexão.");
 		} catch (IOException iOException) {
 			controller.isConnectedToServer.set(false);
-			iOException.printStackTrace();
+			exibirMensagem("\nNão foi possível se conectar.\n" + "Motivo: " + iOException.getMessage());
 		} finally {
 			fecharConexao();
 		}
 	}
 
 	private void conectarComServidor() throws IOException {
-		exibirMensagem("Tentando conectar");
+		exibirMensagem("\nTentando conectar");
 
 		String host = controller.txServidor.getText();
 		int porta = Integer.parseInt(controller.txPorta.getText());
@@ -77,7 +77,7 @@ public class ChatBot extends Application {
 		// cria o Socket para fazer a conexão com o servidor.
 		client = new Socket(InetAddress.getByName(host), porta);
 
-		exibirMensagem("\nConectado com: " + client.getInetAddress().getHostName()+"\n");
+		exibirMensagem("\nConectado com: " + client.getInetAddress().getHostName() + "\n");
 		Platform.runLater(() -> {
 			controller.isConnectedToServer.set(true);
 			controller.taEntrada.requestFocus();
@@ -100,13 +100,13 @@ public class ChatBot extends Application {
 			try {
 				message = (String) input.readObject();
 				exibirMensagem("\nServidor>>> " + message);
-				
-			}catch (SocketException socketException) {
+
+			} catch (SocketException socketException) {
 				Platform.runLater(() -> {
 					controller.taSaida.setText("\nDesconectado do servidor.");
+					fecharConexao();
 				});
-			} 
-			catch (ClassNotFoundException classNotFoundException) {
+			} catch (ClassNotFoundException classNotFoundException) {
 				exibirMensagem("Tipo de objeto desconhecido recebido.");
 			}
 		} while (controller.isConnectedToServer.get());
@@ -114,9 +114,9 @@ public class ChatBot extends Application {
 	}
 
 	public void fecharConexao() {
-		
+
 		try {
-//			enviarDados("encerrar");
+			// enviarDados("encerrar");
 			output.close();
 			input.close();
 			client.close();
