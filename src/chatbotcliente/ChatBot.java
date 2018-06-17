@@ -46,6 +46,9 @@ public class ChatBot extends Application {
 		Scene scene = new Scene(root);
 		stage.setTitle("Chat Bot");
 
+		stage.setWidth(400);
+		stage.setHeight(450);
+		
 		stage.setScene(scene);
 		stage.show();
 
@@ -53,7 +56,7 @@ public class ChatBot extends Application {
 
 	}
 
-	public void rodarCliente() {
+	public void rodarCliente()   {
 		try {
 			conectarComServidor();
 			getStreams();
@@ -63,8 +66,12 @@ public class ChatBot extends Application {
 		} catch (IOException iOException) {
 			controller.isConnectedToServer.set(false);
 			exibirMensagem("\nNão foi possível se conectar.\n" + "Motivo: " + iOException.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
-			fecharConexao();
+//			fecharConexao();
+			rodarCliente();
 		}
 	}
 
@@ -73,6 +80,7 @@ public class ChatBot extends Application {
 
 		String host = controller.txServidor.getText();
 		int porta = Integer.parseInt(controller.txPorta.getText());
+		
 
 		// cria o Socket para fazer a conexão com o servidor.
 		client = new Socket(InetAddress.getByName(host), porta);
@@ -94,21 +102,13 @@ public class ChatBot extends Application {
 
 	}
 
-	private void processaConexao() throws IOException {
+	private void processaConexao() throws ClassNotFoundException, IOException   {
 
 		do {
-			try {
 				message = (String) input.readObject();
 				exibirMensagem("\nServidor>>> " + message);
 
-			} catch (SocketException socketException) {
-				Platform.runLater(() -> {
-					controller.taSaida.setText("\nDesconectado do servidor.");
-					fecharConexao();
-				});
-			} catch (ClassNotFoundException classNotFoundException) {
-				exibirMensagem("Tipo de objeto desconhecido recebido.");
-			}
+			
 		} while (controller.isConnectedToServer.get());
 
 	}
